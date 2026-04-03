@@ -7,7 +7,18 @@ title: Contracts
 
 The Shade Protocol smart contracts run on Citrea mainnet (chain ID 4114). They manage the privacy pool, Merkle tree, proof verification, and token handling.
 
-**Source:** [`packages/contracts/`](https://github.com/shadeprotocolcom/shade-protocol/tree/main/packages/contracts)
+**Source:** [github.com/shadeprotocolcom/contracts](https://github.com/shadeprotocolcom/contracts)
+
+## Deployed contracts (Citrea Mainnet)
+
+| Contract | Address | Explorer |
+|---|---|---|
+| **ShadePool** | `0x2dDfE129904e3099b69F795e3c1B629c2BBd25E9` | [View on CitreaScan](https://citreascan.com/address/0x2dDfE129904e3099b69F795e3c1B629c2BBd25E9) |
+| **Groth16Verifier** | `0x112B554513Cc569dF45135AbDaB6C0a5270d32e7` | [View on CitreaScan](https://citreascan.com/address/0x112B554513Cc569dF45135AbDaB6C0a5270d32e7) |
+| **PoseidonT3** | `0x8020068394883F8a9aEb3b04105d0E24d8f8bd33` | [View on CitreaScan](https://citreascan.com/address/0x8020068394883F8a9aEb3b04105d0E24d8f8bd33) |
+| **PoseidonT4** | `0x070621b268b683656bccEB6c7d6F162F180B9623` | [View on CitreaScan](https://citreascan.com/address/0x070621b268b683656bccEB6c7d6F162F180B9623) |
+
+All contracts are verified and open-source on CitreaScan.
 
 ## Contract architecture
 
@@ -125,7 +136,7 @@ struct BoundParams {
 | RPC | `https://rpc.citreascan.com` |
 | Explorer | `https://citreascan.com` |
 | Native token | cBTC (18 decimals) |
-| WcBTC | WETH9 deployment from JuiceSwap SDK |
+| WcBTC | [`0x3100000000000000000000000000000000000006`](https://citreascan.com/address/0x3100000000000000000000000000000000000006) |
 | Block time | ~2 seconds |
 | Gas limit | 10M per block |
 
