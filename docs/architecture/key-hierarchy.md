@@ -64,14 +64,20 @@ This approach has a security advantage: no key material persists in browser stor
 
 ## Key registration
 
-When a user first connects, their viewing public key and master public key are registered with the indexer:
+When a user first connects, their viewing public key and master public key are registered on-chain via the [ShadeKeyRegistry](/contracts#shadekeyregistry) contract:
 
-```
-POST /keys/register
-{
-  "ethAddress": "0xABC...",
-  "shadePublicKey": "{\"viewingPublicKey\":{\"x\":\"0x...\",\"y\":\"0x...\"},\"masterPublicKey\":\"0x...\"}"
-}
+```solidity
+// Called once per wallet (authenticated by msg.sender)
+keyRegistry.registerKeys(viewingPubKeyX, viewingPubKeyY, masterPublicKey);
 ```
 
-This mapping allows senders to look up a recipient's public key by their standard Ethereum address. No new address format is required — users send scBTC to normal `0x` addresses.
+Senders look up a recipient's keys directly from the blockchain:
+
+```solidity
+// Free view function — no gas cost, no indexer needed
+(bytes32 vpkX, bytes32 vpkY, bytes32 mpk) = keyRegistry.getKeys(recipientAddress);
+```
+
+This on-chain registry enables fully non-custodial operation. No centralized service is required for key distribution — any Citrea node can serve the data.
+
+No new address format is required — users send scBTC to normal `0x` addresses.

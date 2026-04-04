@@ -59,6 +59,22 @@ docker run -p 5000:5000 \
 
 Then configure the SDK or frontend to point to `http://localhost:5000` instead of `prover.shade-protocol.com`.
 
+## Non-custodial design
+
+All critical protocol data is available on-chain or via public repositories:
+
+| Component | Source | Required? |
+|---|---|---|
+| Smart contracts | On-chain (Citrea mainnet) | Yes |
+| Public key registry | On-chain ([ShadeKeyRegistry](/contracts#shadekeyregistry)) | Yes |
+| Merkle tree state | Reconstructable from on-chain events | Yes |
+| Circuit artifacts | [GitHub](https://github.com/shadeprotocolcom/circuits/tree/main/build) | Yes |
+| Indexer | [Open source](https://github.com/shadeprotocolcom/indexer) | Convenience (can self-host) |
+| Prover | [Open source](https://github.com/shadeprotocolcom/prover) | Convenience (can self-host) |
+| Frontend | [Open source](https://github.com/shadeprotocolcom/frontend) | Convenience (can self-host) |
+
+If the official infrastructure (shade-protocol.com) goes offline, any third party can reconstruct the full protocol state from the blockchain and operate independently.
+
 ## tx.origin linkage
 
 Without a relayer, calling `transact()` reveals the caller's Ethereum address on-chain. This links a public address to the fact that a private transaction occurred, though not to its contents. A relayer is planned for Phase 2 to eliminate this linkage.

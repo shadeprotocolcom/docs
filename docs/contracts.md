@@ -17,6 +17,7 @@ The Shade Protocol smart contracts run on Citrea mainnet (chain ID 4114). They m
 | **Groth16Verifier** | `0x112B554513Cc569dF45135AbDaB6C0a5270d32e7` | [View on CitreaScan](https://citreascan.com/address/0x112B554513Cc569dF45135AbDaB6C0a5270d32e7) |
 | **PoseidonT3** | `0x8020068394883F8a9aEb3b04105d0E24d8f8bd33` | [View on CitreaScan](https://citreascan.com/address/0x8020068394883F8a9aEb3b04105d0E24d8f8bd33) |
 | **PoseidonT4** | `0x070621b268b683656bccEB6c7d6F162F180B9623` | [View on CitreaScan](https://citreascan.com/address/0x070621b268b683656bccEB6c7d6F162F180B9623) |
+| **ShadeKeyRegistry** | `0xDBeF67AaF7c9917a67f6710a611ED80C8326118d` | [View on CitreaScan](https://citreascan.com/address/0xDBeF67AaF7c9917a67f6710a611ED80C8326118d) |
 
 All contracts are verified and open-source on CitreaScan.
 
@@ -29,6 +30,8 @@ ShadePool.sol          — Entry point: shield() + transact()
   ├── TokenGuard.sol   — cBTC/WcBTC handling: auto-wrap / auto-unwrap
   ├── PoseidonT3.sol   — 2-input Poseidon hash (from zk-kit, MIT)
   └── PoseidonT4.sol   — 3-input Poseidon hash (from zk-kit, MIT)
+
+ShadeKeyRegistry.sol   — On-chain public key registry (independent)
 ```
 
 ## ShadePool
@@ -139,6 +142,34 @@ struct BoundParams {
 | WcBTC | [`0x3100000000000000000000000000000000000006`](https://citreascan.com/address/0x3100000000000000000000000000000000000006) |
 | Block time | ~2 seconds |
 | Gas limit | 10M per block |
+
+## ShadeKeyRegistry
+
+On-chain registry for Shade public keys. Enables fully non-custodial operation by removing the dependency on the centralized indexer for recipient key lookups.
+
+### `registerKeys(bytes32 viewingPubKeyX, bytes32 viewingPubKeyY, bytes32 masterPublicKey)`
+
+Register or update your Shade public keys. Authenticated via `msg.sender` — only the account owner can set their own keys.
+
+- Overwrites are allowed (e.g. after wallet recovery)
+- Reverts if `masterPublicKey` is zero
+- Emits `KeysRegistered(address indexed account, bytes32, bytes32, bytes32)`
+
+### `getKeys(address account) → (bytes32, bytes32, bytes32)`
+
+Look up a user's registered public keys. Free `view` function — no gas cost.
+
+### `isRegistered(address account) → bool`
+
+Check whether an address has registered keys. Returns `true` if `masterPublicKey` is non-zero.
+
+### Gas costs
+
+| Operation | Gas | Cost at 1 gwei |
+|---|---|---|
+| First registration (3 cold SSTOREs) | ~80K | ~0.00008 cBTC |
+| Key update (3 warm SSTOREs) | ~15K | ~0.000015 cBTC |
+| Lookup / isRegistered (eth_call) | 0 | Free |
 
 ## Building and testing
 

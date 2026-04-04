@@ -5,7 +5,9 @@ title: Indexer
 
 # Indexer
 
-The indexer is the backbone of Shade Protocol's off-chain infrastructure. It scans Citrea mainnet for contract events, maintains a local copy of the Poseidon Merkle tree, and provides a key registry for recipient lookups.
+The indexer scans Citrea mainnet for contract events and maintains a local copy of the Poseidon Merkle tree. It provides Merkle authentication paths needed for witness building and caches event data for efficient balance scanning.
+
+> **Note:** Key registration has moved on-chain to the [ShadeKeyRegistry](/contracts#shadekeyregistry) contract. The indexer's `/keys/*` endpoints remain as a read-through cache but are no longer the primary source of truth.
 
 **Source:** [`packages/indexer/`](https://github.com/shadeprotocolcom/shade-protocol/tree/main/packages/indexer)
 
@@ -120,7 +122,7 @@ The indexer consists of three main components:
 
 1. **Event Scanner** — polls Citrea mainnet via RPC for `Shield`, `Transact`, and `Nullified` events, starting from the deployment block
 2. **Merkle Tree** — binary Poseidon tree (depth 16, 65K capacity) reconstructed from on-chain events, provides authentication paths for witness building
-3. **Key Registry** — SQLite-backed mapping of Ethereum addresses to Shade public keys
+3. **Key Cache** — mirrors the on-chain [ShadeKeyRegistry](/contracts#shadekeyregistry) for fast HTTP lookups (optional, primary source is on-chain)
 
 ## Configuration
 
